@@ -42,9 +42,7 @@ def img_url_list(word):
     img_urls = list(set(img_urls))
     return img_urls
 
-if __name__ == '__main__':
-    word = sys.argv[1]
-    
+if __name__ == '__main__': 
     df=pd.read_csv("flowerlist.csv", header=None)
     for i, rows in df.iterrows():
         word = rows[0] + " 花"
