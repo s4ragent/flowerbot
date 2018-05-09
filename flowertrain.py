@@ -46,5 +46,6 @@ if __name__ == '__main__':
     df=pd.read_csv("flowerlist.csv", header=None)
     for i, rows in df.iterrows():
         word = rows[0] + " 花"
+        print(word)
         for j, img_url in enumerate(img_url_list(word)):
     	        print(img_url)
