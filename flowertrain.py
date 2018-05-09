@@ -9,8 +9,11 @@ from time import time, sleep
 from urllib.request import urlopen, Request
 from urllib.parse import quote
 from bs4 import BeautifulSoup
+from azure.cognitiveservices.vision.customvision.training import training_api
+from azure.cognitiveservices.vision.customvision.training.models import ImageUrlCreateEntry
 
 MY_EMAIL_ADDR = 'agent@mail.s4r.info'
+training_key = "<your training key>"
 
 class Fetcher:
     def __init__(self, ua=''):
@@ -43,9 +46,29 @@ def img_url_list(word):
     return img_urls
 
 if __name__ == '__main__': 
+
+# Replace with a valid key
+    trainer = training_api.TrainingApi(training_key)    
+    project = trainer.create_project("FlowerNameProject")    
+    
     df=pd.read_csv("flowerlist.csv", header=None)
     for i, rows in df.iterrows():
         word = rows[0] + " 花"
         print(word)
+        tag = trainer.create_tag(project.id, str(i))
         for j, img_url in enumerate(img_url_list(word)):
     	        print(img_url)
+                trainer.create_images_from_urls(project.id, [ ImageUrlCreateEntry(url=img_url, tag_ids=[ tag.id ] ) ])
+                time.sleep(0.1)
+    
+    
+    print ("Training...")
+    iteration = trainer.train_project(project.id)
+    while (iteration.status != "Completed"):
+        iteration = trainer.get_iteration(project.id, iteration.id)
+        print ("Training status: " + iteration.status)
+        time.sleep(1)
+
+# The iteration is now trained. Make it the default project endpoint
+    trainer.update_iteration(project.id, iteration.id, is_default=True)
+    print ("Done!")
