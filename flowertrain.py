@@ -66,7 +66,7 @@ if __name__ == '__main__':
     while (iteration.status != "Completed"):
         iteration = trainer.get_iteration(project.id, iteration.id)
         print ("Training status: " + iteration.status)
-        time.sleep(1)
+        sleep(1)
 
 # The iteration is now trained. Make it the default project endpoint
     trainer.update_iteration(project.id, iteration.id, is_default=True)
