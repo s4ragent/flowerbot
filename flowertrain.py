@@ -57,8 +57,9 @@ if __name__ == '__main__':
         print(word)
         tag = trainer.create_tag(project.id, rows[0])
         for j, img_url in enumerate(img_url_list(word)):
-    	    print(img_url)
-    	    trainer.create_images_from_urls(project.id, [ ImageUrlCreateEntry(url=img_url, tag_ids=[tag.id])])
+        if j < 15:
+    	        print(img_url)
+    	        trainer.create_images_from_urls(project.id, [ ImageUrlCreateEntry(url=img_url, tag_ids=[tag.id])])
     
     
     print ("Training...")
